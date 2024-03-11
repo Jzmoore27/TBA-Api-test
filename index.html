@@ -13,7 +13,7 @@
                     $.ajaxSetup({
                         'headers':{
                             'X-TBA-Auth-Key':key,
-                            "Access-Control-Allow-Origin":"*"
+                            "Access-Control-Allow-Origin":"https://www.thebluealliance.com"
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
@@ -77,7 +77,7 @@
                     $.ajaxSetup({
                         'headers':{
                             'X-TBA-Auth-Key':key,
-                            "Access-Control-Allow-Origin":"*"
+                            "Access-Control-Allow-Origin":"https://www.thebluealliance.com"
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+a.value+"/events", function(data, status){
