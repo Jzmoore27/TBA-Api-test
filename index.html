@@ -4,7 +4,7 @@
         <title>Schedule</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script type="module">
-            import Cookies from '/node_modules/js-cookie'
+            import Cookies from '/TBA-Api-test/node_modules/js-cookie'
             $(document).ready(function(){
                 var key
                 $(".refresh").click(function(){
@@ -14,7 +14,6 @@
                     $.ajaxSetup({
                         'headers':{
                             'X-TBA-Auth-Key':key,
-                            "Access-Control-Allow-Origin":"*",
                             "Access-Control-Allow-Origin":"*"
                         }
                     });
@@ -78,7 +77,8 @@
                     select.appendChild(opt);
                     $.ajaxSetup({
                         'headers':{
-                            'X-TBA-Auth-Key':key
+                            'X-TBA-Auth-Key':key,
+                            "Access-Control-Allow-Origin":"*"
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+a.value+"/events", function(data, status){
