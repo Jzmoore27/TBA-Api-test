@@ -13,7 +13,9 @@
                     event = document.getElementById("event").value;
                     $.ajaxSetup({
                         'headers':{
-                            'X-TBA-Auth-Key':key
+                            'X-TBA-Auth-Key':key,
+                            "Access-Control-Allow-Origin":"*",
+                            "Access-Control-Allow-Origin":"*"
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
