@@ -14,7 +14,7 @@
                         'headers':{
                             'X-TBA-Auth-Key':key,
                             "Access-Control-Allow-Origin":"https://www.thebluealliance.com",
-                            "Access-Control-Allow-Headers": "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+                            "Access-Control-Allow-Headers": "Access-Control-Allow-Headers, Access-Control-Allow-Origin, X-TBA-Auth-Key"
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
