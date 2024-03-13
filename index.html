@@ -11,6 +11,9 @@
                     num = document.getElementById("num").value;
                     event = document.getElementById("event").value;
                     $.ajaxSetup({
+                        'CORS': true ,
+                        'contentType':'application/json',
+                        'secure': true,
                         'headers':{
                             'X-TBA-Auth-Key':key,
                             access-control-allow-origin: * 
