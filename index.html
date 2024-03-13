@@ -15,21 +15,7 @@
                         'contentType':'application/json',
                         'secure': true,
                         'headers':{
-                            'X-TBA-Auth-Key':key,
-                            access-control-allow-origin: * 
-                            alt-svc: h3=":443"; ma=86400 
-                            cache-control: public,max-age=61,s-maxage=61 
-                            cf-cache-status: DYNAMIC 
-                            cf-ray: 862fccfc88598f4e-ORD 
-                            content-length: 3 
-                            content-type: application/json 
-                            date: Tue,12 Mar 2024 00:52:18 GMT 
-                            etag: "cd0d4cc32346750408f7d4f5e78ec9a6e5b79a0d" 
-                            nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800} 
-                            report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=atjx5Ick8kV2PqeIfKy13zsw%2F3CMUhhL10QRl2RTAfPaamxz%2FZ%2Flokr8df35iimvgb3wyBr5sZ0iq0koP94R1KQfv3hIxAoz6mKwKlxhL%2BRt%2FKmcAFLxAy4QF9WtQSftTDJBBuYUS1pG1Ekja7uDj7%2FkGf3jWQ%3D%3D"}],"group":"cf-nel","max_age":604800} 
-                            server: cloudflare 
-                            vary: Cookie 
-                            x-cloud-trace-context: 78e6318fd1ce51080adf02e10161c4fe 
+                            'X-TBA-Auth-Key':key
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
