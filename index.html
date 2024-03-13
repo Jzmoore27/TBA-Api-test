@@ -248,9 +248,6 @@
                 
                 document.getElementById("event").addEventListener("change",()=>{document.querySelector('.refresh').click();});
 
-                window.setInterval(()=>{document.querySelector('.refresh').click();},10000);
-                document.querySelector('.refresh').click();
-
                 console.log(getCookie("key"));
                 console.log(`> ${document.cookie}`);
                 if(!getCookie("key")==""){
@@ -266,6 +263,9 @@
                     x.value = getCookie("event");
                     $("#refresh").trigger("click");
                 }
+
+                window.setInterval(()=>{document.querySelector('.refresh').click();},10000);
+                document.querySelector('.refresh').click();
             });
         </script>
         <style>
