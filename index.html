@@ -171,7 +171,9 @@
                             'X-TBA-Auth-Key':key
                         }
                     });
-                    setCookie("key",key,5)
+                    setCookie("key",key,5);s
+                    setCookie("team",num,5);
+                    setCookie("event",event,5);
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
                         var table = document.getElementById("append");
                         table.innerHTML = '<tr><th class="num" style="width: 60px;">Match #</th><th class="red" style="width: 100px;">Red</th><th class="blue" style="width: 100px;">Blue</th></tr>'
