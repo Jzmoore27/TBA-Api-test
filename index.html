@@ -499,6 +499,11 @@
                 width: 500px;
                 height: 400px;
             };
+            #header label{
+                background: #888;
+                border-radius: 3px;
+                border: 1px solid #000;
+            }
         </style>
     </head>
     <body>
@@ -508,8 +513,8 @@
             <button class="refresh"><img src="refresh.svg" width="30px"></button>
             <input class="l" id="key" type="text" placeholder="TBA API Key" style="width: 250px;">
             <input class="l" id="num" type="number" placeholder="Team #">
-            <label for="event">Event Key:</label>
-            <select class="r" id="event" name="event">
+            <label for="event" class="l">Event Key:</label>
+            <select class="l" id="event" name="event">
                 <option value="" selected>Select a Key</option>
             </select>
         </div>
