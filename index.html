@@ -53,6 +53,7 @@
                     option.value = getCookie("event");
                     option.selected = "selected";
                     x.add(option);
+                    $("#event").trigger("change");
                 }
 
                 function ret(dat,keyy,b,event){
