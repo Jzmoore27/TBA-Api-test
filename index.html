@@ -229,7 +229,8 @@
                     opt.innerHTML = "Select a Key";
                     opt.value = ""
                     select.appendChild(opt);
-                    $.get("https://www.thebluealliance.com/api/v3/team/frc"+a.value+"/events/simple", function(data, status){
+                    var num = document.getElementById("num").value;
+                    $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/events/simple", function(data, status){
                         for(var i in data){
                             let key = data[i].key
                             opt = document.createElement("option");
@@ -259,6 +260,7 @@
                     option.value = getCookie("event");
                     option.selected = "selected";
                     x.add(option);
+                    x.value = getCookie("event");
                     $("#refresh").trigger("click");
                 }
             });
