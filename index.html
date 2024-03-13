@@ -35,7 +35,7 @@
                     return "";
                 }
                 
-                console.log(getCookie("key"));
+                console.log(document.cookie);
                 if(!getCookie("key")==""){
                     document.getElementById("key").value = getCookie("key");
                     document.getElementById("num").value = getCookie("team");
