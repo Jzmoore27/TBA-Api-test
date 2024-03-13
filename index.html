@@ -47,8 +47,12 @@
                     document.getElementById("key").value = getCookie("key");
                     document.getElementById("num").value = getCookie("team");
                     $("#num").trigger("change");
-                    document.getElementById("event").value = getCookie("event");
-                    $(".refresh").trigger("click");
+                    var x = document.getElementById("event");
+                    var option = document.createElement("option");
+                    option.text = getCookie("event");
+                    option.value = getCookie("event");
+                    option.selected;
+                    x.add(option);
                 }
 
                 function ret(dat,keyy,b,event){
