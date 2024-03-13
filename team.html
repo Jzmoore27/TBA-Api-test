@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Team</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="module">
+            $(document).ready(function(){
+                function getTeam(){
+                    const queryString = window.location.search;
+                    const urlParams = new URLSearchParams(queryString);
+                    const key = urlParams.get('key');
+                    const team = urlParams.get('team');
+                    $.ajaxSetup({
+                        'headers':{
+                            'X-TBA-Auth-Key':key
+                        }
+                    });
+                    $.get("https://www.thebluealliance.com/api/v3/team/"+team, function(data, status){
+                        document.getElementById("num").innerHTML = "#" + data.team_number;
+                        document.getElementById("Name").innerHTML = data.nickname;
+                        var ap1 = "";
+                        var ap2 = "";
+                        if(!data.gmaps_url==null){ap1="<a href='"+data.gmaps_url+"'>";ap2="</a>";}
+                        document.getElementById("map").innerHTML = ap1+data.city+", "+data.state_prov+", "+data.country+ap2;
+                        document.getElementById("rook").innerHTML = "Rookie year: "+data.rookie_year;
+                        document.getElementById("teeny").innerHTML = "&#9432; aka. "+data.name;
+                    });
+                }
+                getTeam();
+            });
+        </script>
+        <style>
+            a {
+                color: blue;
+                text-shadow: 0px 0px 5px #000;
+                text-decoration: none;
+                font-weight: 600;
+            }
+            #teeny{
+                top: 0;
+                margin-top: -15px;
+                color: lightblue;
+                font-size: 10px;
+            }
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: 400;
+                background: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <p style="float: right;margin-top: 0px;">Powered by <a href="https://www.thebluealliance.com" target="_blank">The Blue Alliance</a></p>
+        <h1 id="num"></h1>
+        <h2 id="Name"></h2>
+        <p id="teeny"></p>
+        <p id="map"></p>
+        <p id="rook"></p>
+    </body>
+</html>

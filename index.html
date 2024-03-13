@@ -3,13 +3,159 @@
     <head>
         <title>Schedule</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script>
+        <script type="module">
             $(document).ready(function(){
                 var key
+                var rank
+                var b
+                var i = 0;
+
+                $.ajaxSetup({
+                    'CORS': true ,
+                    'contentType':'application/json',
+                    'secure': true,
+                    'headers':{
+                        'X-TBA-Auth-Key':key
+                    }
+                });
+
+                function getCookie(cname) {
+                    let name = cname + "=";
+                    let decodedCookie = decodeURIComponent(document.cookie);
+                    let ca = decodedCookie.split(';');
+                    for(let i = 0; i <ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+                
+                console.log(getCookie("key"));
+                if(!getCookie("key")==""){
+                    document.getElementById("key").value = getCookie("key");
+                    document.getElementById("num").value = getCookie("team");
+                    $("#num").trigger("change");
+                    document.getElementById("event").value = getCookie("event");
+                    $(".refresh").trigger("click");
+                }
+
+                function ret(dat,keyy,b,event){
+                    var name = "";
+                    var rank = "";
+                    var team = "";
+                    $.get("https://www.thebluealliance.com/api/v3/team/"+dat, function(data, status){
+                        name = data.nickname;
+                        team = data.team_number
+                            $.get("https://www.thebluealliance.com/api/v3/team/"+dat+"/event/"+event+"/status", function(data, status){
+                                rank = data.qual.ranking.rank;
+                                eval("rt"+b+".innerHTML = '<h3>"+team+"</h3><h5>"+name+"</h5><strong>"+rank+"</strong>';");
+                                let url = "team.html?key="+keyy+"&team="+dat;
+                                eval("rt"+b+".addEventListener('click',()=>{document.getElementById('teamframe').setAttribute('src','"+url+"');document.getElementById('framebox').style.right='0';});");
+                                console.log("ding",i);
+                        });
+                    });
+                }
+                function bet(dat,keyy,b,event){
+                    var name = "";
+                    var rank = "";
+                    var team = "";
+                    $.get("https://www.thebluealliance.com/api/v3/team/"+dat, function(data, status){
+                        name = data.nickname;
+                        team = data.team_number
+                            $.get("https://www.thebluealliance.com/api/v3/team/"+dat+"/event/"+event+"/status", function(data, status){
+                                rank = data.qual.ranking.rank;
+                                eval("bt"+b+".innerHTML = '<h3>"+team+"</h3><h5>"+name+"</h5><strong>"+rank+"</strong>';");
+                                let url = "team.html?key="+keyy+"&team="+dat;
+                                eval("bt"+b+".addEventListener('click',()=>{document.getElementById('teamframe').setAttribute('src','"+url+"');document.getElementById('framebox').style.right='0';});");
+                                console.log("ding",i)
+                        });
+                    });
+                }
+
+                async function rcall(data,keyy,i,event){
+                    while(i < data.alliances.red.team_keys.length){
+                        let dat = data.alliances.red.team_keys[i];
+                        b = i + 1; 
+                        console.log(b);
+                        eval("rt"+b+".innerHTML = '';")
+                        var team = dat.split('frc')[1];
+                        await ret(dat,keyy,b,event);
+                        i = i + 1;
+                    }
+                }
+
+                async function bcall(data,keyy,i,event,bar){
+                    while(i < data.alliances.blue.team_keys.length){
+                        let dat = data.alliances.blue.team_keys[i];
+                        b = i + 1; 
+                        console.log(b);
+                        eval("bt"+b+".innerHTML = '';")
+                        var team = dat.split('frc')[1];
+                        await bet(dat,keyy,b,event);
+                        bar.style.width = (b*33.4)+"%";
+                        if(b>2){bar.style.opacity=0;}
+                        i = i + 1;
+                    }
+                    window.setTimeout(()=>{bar.style.width = '0%';window.setTimeout(()=>{bar.style.opacity = '1';},1000);},1000)
+                }
+
+                document.getElementById("close").addEventListener("click", ()=>{
+                    document.getElementById("matchbox").style.bottom="-200px";
+                });
+
+                function getMatch(matchKey){
+                    $.get("https://www.thebluealliance.com/api/v3/match/"+matchKey, function(data, status){
+                        key = document.getElementById("key").value;
+                        var event = document.getElementById("event").value;
+                        let box = document.getElementById("matchbox");
+                        let bar = document.getElementById("bar");
+                        bar.style.transtion = "0s";
+                        bar.style.width = "0%";
+                        bar.style.transtion = "1s";
+                        box.style.bottom="0px"
+                        let lev = "?";
+                        let num = data.match_number;
+                        if(data.comp_level=="qm"){lev = "Quals #"+num}
+                        else if(data.comp_level=="sf"){lev = "Semis #"+num}
+                        else if(data.comp_level=="f"){lev = "Finals #"+num}
+                        document.getElementById("match").innerHTML = lev;
+                        let ort1 = document.getElementById("rt1");
+                        let rt1 = ort1.cloneNode(true);
+                        ort1.parentNode.replaceChild(rt1, ort1);
+                        let ort2 = document.getElementById("rt2");
+                        let rt2 = ort2.cloneNode(true);
+                        ort2.parentNode.replaceChild(rt2, ort2);
+                        let ort3 = document.getElementById("rt3");
+                        let rt3 = ort3.cloneNode(true);
+                        ort3.parentNode.replaceChild(rt3, ort3);
+                        let obt1 = document.getElementById("bt1");
+                        let bt1 = obt1.cloneNode(true);
+                        obt1.parentNode.replaceChild(bt1, obt1);
+                        let obt2 = document.getElementById("bt2");
+                        let bt2 = obt2.cloneNode(true);
+                        obt2.parentNode.replaceChild(bt2, obt2);
+                        let obt3 = document.getElementById("bt3");
+                        let bt3 = obt3.cloneNode(true);
+                        obt3.parentNode.replaceChild(bt3, obt3);
+                        i = 0
+                        rcall(data,key,i,event);
+                        i = 0
+                        bcall(data,key,i,event,bar);
+                    });
+                }
+
                 $(".refresh").click(function(){
                     key = document.getElementById("key").value;
-                    num = document.getElementById("num").value;
-                    event = document.getElementById("event").value;
+                    var num = document.getElementById("num").value;
+                    var event = document.getElementById("event").value;
+                    const date = new Date();
+                    let utctime = new Date(date.getTime());
+                    let timestamp =  utctime.toUTCString()
                     $.ajaxSetup({
                         'CORS': true ,
                         'contentType':'application/json',
@@ -18,26 +164,27 @@
                             'X-TBA-Auth-Key':key
                         }
                     });
+                    document.cookie = "key="+key+"; team="+num+"; event="+event+"; expires="+timestamp;
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
-                        table = document.getElementById("append");
+                        var table = document.getElementById("append");
                         table.innerHTML = '<tr><th class="num" style="width: 60px;">Match #</th><th class="red" style="width: 100px;">Red</th><th class="blue" style="width: 100px;">Blue</th></tr>'
                         var redTeams = []
                         var blueTeams = []
                         var row = []
                         data.sort((a,b)=>{let aoff = 0;let boff = 0;if(a.comp_level=="sf"){aoff=1000}if(a.comp_level=="f"){aoff=2000}if(b.comp_level=="sf"){boff=1000}if(b.comp_level=="f"){boff=2000}if(!((a.match_number+aoff)===(b.match_number+boff))){return (a.match_number+aoff)-(b.match_number+boff);}else{return a.predicted_time-b.predicted_time}});
-                        for(i in data){
-                            dat = data[i]
-                            var level = "unknown";
+                        for(var i in data){
+                            let dat = data[i]
+                            let level = "unknown";
                             row[i] = document.createElement("tr");
-                            red = document.createElement("td");
+                            let red = document.createElement("td");
                             red.innerHTML = dat.alliances.red.score;
                             red.classList.add('red');
                             if(dat.winning_alliance=="red"){red.classList.add("win");}
-                            blue = document.createElement("td");
+                            let blue = document.createElement("td");
                             blue.innerHTML = dat.alliances.blue.score;
                             blue.classList.add('blue');
                             if(dat.winning_alliance=="blue"){blue.classList.add("win");}
-                            num = document.createElement("td");
+                            let num = document.createElement("td");
                             if(dat.comp_level == "qm"){level = "Qual "}
                             else if(dat.comp_level == "sf"){level = "Semis "}
                             else if(dat.comp_level == "f"){level = "Final "}
@@ -54,28 +201,21 @@
                             row[i].appendChild(blue);
                             redTeams[i] = []
                             for(a in dat.alliances.red.team_keys){
-                                redTeams[i][a] = dat.alliances.red.team_keys[a];
+                                redTeams[i][a] = "<a href=\"/teams?team="+dat.alliances.red.team_keys[a]+"&key="+key+"\">"+dat.alliances.red.team_keys[a]+"</a>";
                             }
                             blueTeams[i] = []
                             for(a in dat.alliances.blue.team_keys){
-                                blueTeams[i][a] = dat.alliances.blue.team_keys[a];
+                                blueTeams[i][a] = "<a href=\"/teams?team="+dat.alliances.blue.team_keys[a]+"&key="+key+"\">"+dat.alliances.blue.team_keys[a]+"</a>";
                             }
-                            eval('row['+i+'].addEventListener("mouseover", () => {for(e in redTeams['+i+']){t = document.createElement("td");t.innerHTML = redTeams['+i+'][e];t.classList.add("red");t.classList.add("del");if("'+dat.winning_alliance+'"=="red"){t.classList.add("win");}row['+i+'].appendChild(t);}for(e in blueTeams['+i+']){t = document.createElement("td");t.innerHTML = blueTeams['+i+'][e];t.classList.add("blue");t.classList.add("del");if("'+dat.winning_alliance+'"=="blue"){t.classList.add("win");}row['+i+'].appendChild(t);}});');
-                            eval('row['+i+'].addEventListener("mouseout", () => {r = document.getElementsByClassName("del");while(r[0]){r[0].parentNode.removeChild(r[0]);}});');
+                            eval('row['+i+'].addEventListener("click", ()=>{getMatch("'+dat.key+'");});');
                             table.appendChild(row[i]);
                         }
                     });
                 });
 
-                a = document.getElementById("num")
+                var a = document.getElementById("num")
                 a.addEventListener("change", (event) => {
                     key = document.getElementById("key").value;
-                    select = document.getElementById("event");
-                    select.innerHTML="";
-                    opt = document.createElement("option");
-                    opt.innerHTML = "Select a Key";
-                    opt.value = ""
-                    select.appendChild(opt);
                     $.ajaxSetup({
                         'CORS': true ,
                         'contentType':'application/json',
@@ -84,8 +224,14 @@
                             'X-TBA-Auth-Key':key
                         }
                     });
-                    $.get("https://www.thebluealliance.com/api/v3/team/frc"+a.value+"/events", function(data, status){
-                        for(i in data){
+                    var select = document.getElementById("event");
+                    select.innerHTML="";
+                    var opt = document.createElement("option");
+                    opt.innerHTML = "Select a Key";
+                    opt.value = ""
+                    select.appendChild(opt);
+                    $.get("https://www.thebluealliance.com/api/v3/team/frc"+a.value+"/events/simple", function(data, status){
+                        for(var i in data){
                             let key = data[i].key
                             opt = document.createElement("option");
                             opt.innerHTML = key;
@@ -94,6 +240,13 @@
                         }
                     });
                 });
+                
+                var closeframe = document.getElementById("closeframe");
+                closeframe.addEventListener("click",()=>{
+                    document.getElementById("framebox").style.right="-504px";
+                });
+                
+                document.getElementById("event").addEventListener("change",()=>{document.querySelector('.refresh').click();});
             });
         </script>
         <style>
@@ -186,10 +339,10 @@
             body{
                 overflow: hidden;
                 background: #3A3A3A;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-family: arial;
             }
             #overflow{
-                height: 100%;
+                height: 550px;
                 width: 120%;
                 margin-top: 5%;
                 overflow-x: hidden;
@@ -197,7 +350,7 @@
                 direction: rtl;
             }
             #header{
-                width: 60%;
+                width: 63%;
             }
             #header h2{
                 float: left;
@@ -224,20 +377,123 @@
             .l{
                 float: left;
             }
+            #matchbox{
+                position: fixed;
+                display: inline-block;
+                margin-left: -8px;
+                padding: 0px;
+                height: 200px;
+                width: 100%;
+                bottom: -200px;
+                background: #4DA4EA;
+                text-align: center;
+                transition: 1s;
+            }
+            #matchbox h2{
+                margin-top: 0px;
+                font-size: 30px;
+                font-weight: 900;
+                letter-spacing: 5px;
+            }
+            #flex{
+                display: inline;
+            }
+            #redbck{
+                width: 50%;
+                position: absolute;
+                z-index: 1;
+                top: 40px;
+                overflow-x: hidden;
+                padding-top: 20px;
+                left: 0;
+                height: 100%;
+                margin: 0px;
+                padding: 0px;
+                border-right: 5px solid #000;
+                background: red;
+                overflow: hidden;
+                display: inline-block;
+                border-top: 4px solid #000;
+            }
+            #bluebck{
+                width: 50%;
+                position: absolute;
+                z-index: 1;
+                top: 40px;
+                overflow-x: hidden;
+                padding-top: 20px;
+                right: 0;
+                height: 100%;
+                margin: 0px;
+                padding: 0px;
+                border-left: 5px solid #000;
+                background: blue;
+                overflow: hidden;
+                display: inline-block;
+                border-top: 4px solid #000;
+            }
+            .teamBox{
+                border: 2px solid #000;
+                border-radius: 5px;
+                float: left;
+                margin-right: 1%;
+                margin-top: 5px;
+                width: 25%;
+                height: 140px;
+                background: rgba(255,255,255,0.3);
+            }
+            .teamBox:first-child{
+                margin-left: 10%;
+            }
+            #close{
+                margin-top: -70px;
+            }
+            .close{
+                float: right;
+                background: none;
+                border: none;
+                font-weight: 600;
+                font-size: 40px;
+            }
+            #bar{
+                position: absolute;
+                height: 10px;
+                background: #000;
+                z-index: 1000;
+                transition: 1s;
+                width: 0%;
+                bottom: 0;
+            }
+            #framebox{
+                top: 0;
+                position: absolute;
+                right: -508px;
+                width: 500px;
+                height: 404px;
+                border: 4px solid #000;
+                overflow: hidden;
+                transition: 1s;
+                background: #222;
+            }
+            #framebox iframe{
+                width: 500px;
+                height: 400px;
+            };
         </style>
     </head>
     <body>
+        <p style="float: right;margin-top: 0px;">Powered by <a style="color: blue;text-shadow: 0px 0px 5px #000;text-decoration: none;font-weight: 600;" href="https://www.thebluealliance.com" target="_blank">The Blue Alliance</a></p>
         <div id="header">
             <h2>Matches</h2>
             <button class="refresh"><img src="refresh.svg" width="30px"></button>
             <input class="l" id="key" type="text" placeholder="TBA API Key" style="width: 250px;">
             <input class="l" id="num" type="number" placeholder="Team #">
+            <label for="event">Event Key:</label>
             <select class="r" id="event" name="event">
                 <option value="" selected>Select a Key</option>
             </select>
         </div>
         <div id="container">
-            
             <div id="overflow">
                 <table id="append">
                     <tr>
@@ -247,6 +503,51 @@
                     </tr>
                 </table>
             </div>
+        </div>
+        <div id="matchbox">
+            <h2 id="match">Quals #2</h2>
+            <button id="close" class="close">&times;</button>
+            <div id="flex">
+                <div id="redbck">
+                    <div class="rteam teamBox" id="rt1">
+                        <h3>9999</h3>
+                        <h5>Example Team</h5>
+                        <strong>Rank: 19</strong>
+                    </div>
+                    <div class="rteam teamBox" id="rt2">
+                        <h3>9999</h3>
+                        <h5>Example Team</h5>
+                        <strong>Rank: 19</strong>
+                    </div>
+                    <div class="rteam teamBox" id="rt3">
+                        <h3>9999</h3>
+                        <h5>Example Team</h5>
+                        <strong>Rank: 19</strong>
+                    </div>
+                </div>
+                <div id="bluebck">
+                    <div class="bteam teamBox" id="bt1">
+                        <h3>9999</h3>
+                        <h5>Example Team</h5>
+                        <strong>Rank: 19</strong>
+                    </div>
+                    <div class="bteam teamBox" id="bt2">
+                        <h3>9999</h3>
+                        <h5>Example Team</h5>
+                        <strong>Rank: 19</strong>
+                    </div>
+                    <div class="bteam teamBox" id="bt3">
+                        <h3>9999</h3>
+                        <h5>Example Team</h5>
+                        <strong>Rank: 19</strong>
+                    </div>
+                </div>
+            </div>
+            <div id="bar"></div>
+        </div>
+        <div id="framebox">
+            <button id="closeframe" class="close">&times;</button>
+            <iframe id="teamframe"></iframe>
         </div>
     </body>
 </html>
