@@ -77,12 +77,11 @@
                     opt.value = ""
                     select.appendChild(opt);
                     $.ajaxSetup({
+                        'CORS': true ,
+                        'contentType':'application/json',
+                        'secure': true,
                         'headers':{
-                            'X-TBA-Auth-Key':key,
-                            "Access-Control-Allow-Origin": "*",
-                            "Access-Control-Allow-Credentials": "true",
-                            "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-                            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Methods"
+                            'X-TBA-Auth-Key':key
                         }
                     });
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+a.value+"/events", function(data, status){
