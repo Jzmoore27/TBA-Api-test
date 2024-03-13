@@ -19,23 +19,30 @@
                     }
                 });
 
-                function getCookie(cname) {
-                    let name = cname + "=";
-                    let decodedCookie = decodeURIComponent(document.cookie);
-                    let ca = decodedCookie.split(';');
-                    for(let i = 0; i <ca.length; i++) {
-                        let c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
+                function setCookie(c_name, value, exdays){
+                    var exdate = new Date();
+                    exdate.setDate(exdate.getDate() + exdays);
+                    var c_value = escape(value) + 
+                        ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+                    document.cookie = c_name + "=" + c_value;
+                }
+
+                function getCookie(c_name){
+                    var i, x, y, ARRcookies = document.cookie.split(";");
+                    for (i = 0; i < ARRcookies.length; i++)
+                    {
+                        x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                        y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                        x = x.replace(/^\s+|\s+$/g, "");
+                        if (x == c_name)
+                        {
+                        return unescape(y);
                         }
                     }
-                    return "";
                 }
                 
-                console.log(document.cookie);
+                console.log(getCookie("key"));
+                console.log(`> ${document.cookie}`);
                 if(!getCookie("key")==""){
                     document.getElementById("key").value = getCookie("key");
                     document.getElementById("num").value = getCookie("team");
@@ -164,7 +171,7 @@
                             'X-TBA-Auth-Key':key
                         }
                     });
-                    document.cookie = "key="+key+"; team="+num+"; event="+event+"; expires="+timestamp;
+                    setCookie("key",key,5)
                     $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
                         var table = document.getElementById("append");
                         table.innerHTML = '<tr><th class="num" style="width: 60px;">Match #</th><th class="red" style="width: 100px;">Red</th><th class="blue" style="width: 100px;">Blue</th></tr>'
