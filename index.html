@@ -213,8 +213,7 @@
                     });
                 });
 
-                var a = document.getElementById("num")
-                a.addEventListener("change", (event) => {
+                function selection(){
                     key = document.getElementById("key").value;
                     $.ajaxSetup({
                         'CORS': true ,
@@ -240,7 +239,10 @@
                             select.appendChild(opt);
                         }
                     });
-                });
+                }
+                
+                var a = document.getElementById("num")
+                a.addEventListener("change", selection());
                 
                 var closeframe = document.getElementById("closeframe");
                 closeframe.addEventListener("click",()=>{
@@ -262,7 +264,7 @@
                     option.selected = "selected";
                     x.add(option);
                     x.value = getCookie("event");
-                    $("#refresh").trigger("click");
+                    selection();
                 }
 
                 window.setInterval(()=>{document.querySelector('.refresh').click();},10000);
