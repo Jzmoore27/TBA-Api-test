@@ -213,7 +213,7 @@
                     });
                 });
 
-                function selection(){
+                function selection(selected){
                     key = document.getElementById("key").value;
                     $.ajaxSetup({
                         'CORS': true ,
@@ -235,7 +235,10 @@
                             let key = data[i].key
                             opt = document.createElement("option");
                             opt.innerHTML = key;
-                            opt.value = key
+                            opt.value = key;
+                            if(key==selected){
+                                opt.selected = "selected";
+                            }
                             select.appendChild(opt);
                         }
                     });
@@ -264,7 +267,7 @@
                     option.selected = "selected";
                     x.add(option);
                     x.value = getCookie("event");
-                    selection();
+                    selection(getCookie("event"));
                 }
 
                 window.setInterval(()=>{document.querySelector('.refresh').click();},10000);
