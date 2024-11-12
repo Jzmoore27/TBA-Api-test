@@ -14,30 +14,30 @@
                 $.ajaxSetup({
                     'CORS': true ,
                     'contentType':'application/json',
-                    'secure': true,
-                    'headers':{
-                        'X-TBA-Auth-Key':key
-                    }
+                    'secure': true
                 });
 
                 function setCookie(c_name, value, exdays){
                     var exdate = new Date();
                     exdate.setDate(exdate.getDate() + exdays);
-                    var c_value = escape(value) + 
+                    var c_value = value;
                         ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
                     document.cookie = c_name + "=" + c_value;
+                    console.log("cook: "+document.cookie+" : "+c_name + "=" + c_value);
                 }
 
                 function getCookie(c_name){
                     var i, x, y, ARRcookies = document.cookie.split(";");
+                    console.log(document.cookie);
                     for (i = 0; i < ARRcookies.length; i++)
                     {
                         x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
                         y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
                         x = x.replace(/^\s+|\s+$/g, "");
+                        console.log("pls:"+y+" : "+x);
                         if (x == c_name)
                         {
-                        return unescape(y);
+                            return y;
                         }
                     }
                 }
@@ -107,122 +107,32 @@
                 });
 
                 function getMatch(matchKey){
-                    $.get("https://www.thebluealliance.com/api/v3/match/"+matchKey, function(data, status){
-                        key = document.getElementById("key").value;
-                        var event = document.getElementById("event").value;
-                        let box = document.getElementById("matchbox");
-                        let bar = document.getElementById("bar");
-                        bar.style.transtion = "0s";
-                        bar.style.width = "0%";
-                        bar.style.transtion = "1s";
-                        box.style.bottom="0px"
-                        let lev = "?";
-                        let num = data.match_number;
-                        if(data.comp_level=="qm"){lev = "Quals #"+num}
-                        else if(data.comp_level=="sf"){lev = "Semis #"+num}
-                        else if(data.comp_level=="f"){lev = "Finals #"+num}
-                        document.getElementById("match").innerHTML = lev;
-                        let ort1 = document.getElementById("rt1");
-                        let rt1 = ort1.cloneNode(true);
-                        ort1.parentNode.replaceChild(rt1, ort1);
-                        let ort2 = document.getElementById("rt2");
-                        let rt2 = ort2.cloneNode(true);
-                        ort2.parentNode.replaceChild(rt2, ort2);
-                        let ort3 = document.getElementById("rt3");
-                        let rt3 = ort3.cloneNode(true);
-                        ort3.parentNode.replaceChild(rt3, ort3);
-                        let obt1 = document.getElementById("bt1");
-                        let bt1 = obt1.cloneNode(true);
-                        obt1.parentNode.replaceChild(bt1, obt1);
-                        let obt2 = document.getElementById("bt2");
-                        let bt2 = obt2.cloneNode(true);
-                        obt2.parentNode.replaceChild(bt2, obt2);
-                        let obt3 = document.getElementById("bt3");
-                        let bt3 = obt3.cloneNode(true);
-                        obt3.parentNode.replaceChild(bt3, obt3);
-                        i = 0
-                        rcall(data,key,i,event);
-                        i = 0
-                        bcall(data,key,i,event,bar);
+                    $.get("", function(data, status){
+                        
                     });
                 }
 
                 $(".refresh").click(function(){
-                    key = document.getElementById("key").value;
                     var num = document.getElementById("num").value;
                     var event = document.getElementById("event").value;
-                    const date = new Date();
-                    let utctime = new Date(date.getTime());
-                    let timestamp =  utctime.toUTCString()
                     $.ajaxSetup({
                         'CORS': true ,
                         'contentType':'application/json',
-                        'secure': true,
-                        'headers':{
-                            'X-TBA-Auth-Key':key
-                        }
+                        'secure': true
                     });
-                    setCookie("key",key,5);
-                    setCookie("team",num,5);
-                    setCookie("event",event,5);
-                    $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/event/"+event+"/matches", function(data, status){
-                        var table = document.getElementById("append");
-                        table.innerHTML = '<tr><th class="num" style="width: 60px;">Match #</th><th class="red" style="width: 100px;">Red</th><th class="blue" style="width: 100px;">Blue</th></tr>'
-                        var redTeams = []
-                        var blueTeams = []
-                        var row = []
-                        data.sort((a,b)=>{let aoff = 0;let boff = 0;if(a.comp_level=="sf"){aoff=1000}if(a.comp_level=="f"){aoff=2000}if(b.comp_level=="sf"){boff=1000}if(b.comp_level=="f"){boff=2000}if(!((a.match_number+aoff)===(b.match_number+boff))){return (a.match_number+aoff)-(b.match_number+boff);}else{return a.predicted_time-b.predicted_time}});
-                        for(var i in data){
-                            let dat = data[i]
-                            let level = "unknown";
-                            row[i] = document.createElement("tr");
-                            let red = document.createElement("td");
-                            red.innerHTML = dat.alliances.red.score;
-                            red.classList.add('red');
-                            if(dat.winning_alliance=="red"){red.classList.add("win");}
-                            let blue = document.createElement("td");
-                            blue.innerHTML = dat.alliances.blue.score;
-                            blue.classList.add('blue');
-                            if(dat.winning_alliance=="blue"){blue.classList.add("win");}
-                            let num = document.createElement("td");
-                            if(dat.comp_level == "qm"){level = "Qual "}
-                            else if(dat.comp_level == "sf"){level = "Semis "}
-                            else if(dat.comp_level == "f"){level = "Final "}
-                            var d = new Date(parseInt(dat.predicted_time+"000"));
-                            var hours = d.getHours()
-                            var minutes = d.getMinutes()
-                            var set = "AM"
-                            if(hours>12){hours-=12;set="PM"}
-                            if(minutes<10){minutes="0"+minutes}
-                            num.innerHTML = level+dat.match_number+", "+hours+":"+minutes+set;
-                            num.classList.add('num');
-                            row[i].appendChild(num);
-                            row[i].appendChild(red);
-                            row[i].appendChild(blue);
-                            redTeams[i] = []
-                            for(a in dat.alliances.red.team_keys){
-                                redTeams[i][a] = "<a href=\"/teams?team="+dat.alliances.red.team_keys[a]+"&key="+key+"\">"+dat.alliances.red.team_keys[a]+"</a>";
-                            }
-                            blueTeams[i] = []
-                            for(a in dat.alliances.blue.team_keys){
-                                blueTeams[i][a] = "<a href=\"/teams?team="+dat.alliances.blue.team_keys[a]+"&key="+key+"\">"+dat.alliances.blue.team_keys[a]+"</a>";
-                            }
-                            eval('row['+i+'].addEventListener("click", ()=>{getMatch("'+dat.key+'");});');
-                            table.appendChild(row[i]);
-                        }
+                    setCookie("team",num,30);
+                    setCookie("event",event,30);
+                    $.get("https://api.statbotics.io/v3/team_year/5907/2024", function(data, status){
+                        console.log(data);
                     });
                 });
 
                 var a = document.getElementById("num")
                 a.addEventListener("change", (event) => {
-                    key = document.getElementById("key").value;
                     $.ajaxSetup({
                         'CORS': true ,
                         'contentType':'application/json',
-                        'secure': true,
-                        'headers':{
-                            'X-TBA-Auth-Key':key
-                        }
+                        'secure': true
                     });
                     var select = document.getElementById("event");
                     select.innerHTML="";
@@ -231,9 +141,12 @@
                     opt.value = ""
                     select.appendChild(opt);
                     var num = document.getElementById("num").value;
-                    $.get("https://www.thebluealliance.com/api/v3/team/frc"+num+"/events/simple", function(data, status){
+                    let date = new Date();
+                    setCookie("team",num,30);
+                    $.get("https://api.statbotics.io/v3/team_events?team="+num+"&year="+(date.getYear()+1900), function(data, status){
                         for(var i in data){
-                            let key = data[i].key
+                            let key = data[i].event
+                            console.log(key);
                             opt = document.createElement("option");
                             opt.innerHTML = key;
                             opt.value = key
@@ -249,10 +162,9 @@
                 
                 document.getElementById("event").addEventListener("change",()=>{document.querySelector('.refresh').click();});
 
-                console.log(getCookie("key"));
+                console.log(getCookie("team"));
                 console.log(`> ${document.cookie}`);
-                if(!getCookie("key")==""){
-                    document.getElementById("key").value = getCookie("key");
+                if(!getCookie("team")==""){
                     document.getElementById("num").value = getCookie("team");
                     $("#num").trigger("change");
                     var x = document.getElementById("event");
@@ -502,13 +414,10 @@
         </style>
     </head>
     <body>
-        <p style="float: right;margin-top: 0px;">Powered by <a style="color: blue;text-shadow: 0px 0px 5px #000;text-decoration: none;font-weight: 600;" href="https://www.thebluealliance.com" target="_blank">The Blue Alliance</a></p>
         <div id="header">
             <h2>Matches</h2>
             <button class="refresh"><img src="refresh.svg" width="30px"></button>
-            <input class="l" id="key" type="text" placeholder="TBA API Key" style="width: 250px;">
             <input class="l" id="num" type="number" placeholder="Team #">
-            <label for="event">Event Key:</label>
             <select class="r" id="event" name="event">
                 <option value="" selected>Select a Key</option>
             </select>
