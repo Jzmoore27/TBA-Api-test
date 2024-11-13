@@ -166,7 +166,7 @@
             header{
                 background-color: #2A2A2A;
                 color: white;
-                padding: 10px;
+                padding: 1vh;
                 display: flex;
                 justify-content: space-between;
                 height: 8vh;
@@ -174,9 +174,13 @@
                 margin-right: -8px;
                 margin-top: -8px;
             }
+            main{
+                height: 90vh;
+            }
             main #progress{
                 background-color:blue;
                 transition: 0.1s linear;
+                position:absolute;
                 float:left;
                 width: 102%;
                 height:5px;
@@ -187,16 +191,16 @@
                 display: none;
             }
             .screenSwipe {
-                height: 90vh; /* 100% Full-height */
-                width: 0; /* 0 width - change this with JavaScript */
-                position: fixed; /* Stay in place */
-                z-index: 1; /* Stay on top */
-                top: 11vh; /* Stay at the top */
+                height: 90vh; 
+                width: 0; 
+                position: fixed;
+                z-index: 1; 
+                top: 10vh; 
                 right: 0;
-                background-color: #2A2A6F; /* Black*/
-                overflow-x: hidden; /* Disable horizontal scroll */
-                padding-top: 60px; /* Place content 60px from the top */
-                transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+                background-color: #2A2A6F;
+                overflow-x: hidden;
+                padding-top: 60px;
+                transition: 0.5s;
                 text-align: center;
                 color: white;
             }
@@ -222,9 +226,13 @@
                 align-items: center;
                 height: 90vh;
                 width: 15%;
-                overflow-y: scroll;
-                -ms-overflow-style: none;
-                scrollbar-width: none;
+                margin: none;
+            }
+            #matchtitle{
+                color: white;
+                text-align: center;
+                margin-top: 0;
+                height: 3vh;
             }
             #num{
                 width: 140px;
@@ -251,17 +259,26 @@
                 cursor: inherit;
             }
             .matches{
-                Color: black;
-                height: 80vh;
-                width: 100%;
-                overflow-y: auto;
+                color: black;
+                left: 0;
+                top: 5vh;
+                width: 15%;
+                height: 85vh;
             }
-            .matches tr{
+            .matches .container{
+                overflow-y: auto;
+                height: 100%;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .matches .container::-webkit-scrollbar {
+                    display: none;
+                }
+            .matches tr td{
                 cursor: pointer;
-                transition: 1s ease-out;
-                border-radius: 5px;
-                height: 15px;
-                width: 100%;
+                border-radius: 10px;
+                height: 50px;
+                width: 15%;
             }
             .matches .red{
                 background-color: red;
@@ -279,12 +296,14 @@
         </header>
         <span onclick="openNav()" class="closebtn">&#9776;</span>
         <main>
-            <div id="progress"></div><br>
-            <section id="matches" class="sidebar">
-                    <h3>Matches</h3>
-                    <table id="append" class="matches">
+            <div id="progress"></div>
+            <section class="matches" class="sidebar">
+                    <h3 id="matchtitle">Matches</h3>
+                    <div class="container">
+                        <table id="append">
 
-                    </table>
+                        </table>
+                    </div>
             </section>
         </main>
 
