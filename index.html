@@ -10,10 +10,6 @@
                 var rank
                 var b
                 var i = 0;
-                var west = fetch({
-                    url: "https://www.youtube.com/@InugamiKorone/live",
-                    mode:"cors"
-                });
 
                 $.ajaxSetup({
                     'CORS': true ,
@@ -47,7 +43,6 @@
                 }
 
                 $(".refresh").click(function(){
-                    console.log(west);
                     var num = document.getElementById("num").value;
                     var event = document.getElementById("event").value;
                     $.ajaxSetup({
