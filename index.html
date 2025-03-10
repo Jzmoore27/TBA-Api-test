@@ -11,12 +11,9 @@
                 var b
                 var i = 0;
                 var west = fetch({
-                    method: "GET",
                     url: "https://www.youtube.com/@InugamiKorone/live",
                     mode:"cors"
-                }).then(function(data){
-                    console.log(data);
-                });
+                }).then(console.log);
 
                 $.ajaxSetup({
                     'CORS': true ,
