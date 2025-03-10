@@ -15,7 +15,7 @@
                     url: "https://www.youtube.com/@InugamiKorone/live",
                     mode:"cors"
                 }).then(function(data){
-                    console.log(data.includes("<html"));
+                    console.log(data.contentType);
                 });
 
                 $.ajaxSetup({
