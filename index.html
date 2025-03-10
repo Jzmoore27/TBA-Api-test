@@ -127,7 +127,8 @@
                     });
                 });
 
-                function selection(selected){
+                var a = document.getElementById("num")
+                a.addEventListener("change", (event) => {
                     $.ajaxSetup({
                         'CORS': true ,
                         'contentType':'application/json',
@@ -148,17 +149,11 @@
                             console.log(key);
                             opt = document.createElement("option");
                             opt.innerHTML = key;
-                            opt.value = key;
-                            if(key==selected){
-                                opt.selected = "selected";
-                            }
+                            opt.value = key
                             select.appendChild(opt);
                         }
                     });
-                }
-                
-                var a = document.getElementById("num")
-                a.addEventListener("change", selection());
+                });
                 
                 var closeframe = document.getElementById("closeframe");
                 closeframe.addEventListener("click",()=>{
@@ -179,7 +174,7 @@
                     option.selected = "selected";
                     x.add(option);
                     x.value = getCookie("event");
-                    selection(getCookie("event"));
+                    $("#refresh").trigger("click");
                 }
 
                 window.setInterval(()=>{document.querySelector('.refresh').click();},10000);
@@ -416,11 +411,6 @@
                 width: 500px;
                 height: 400px;
             };
-            #header label{
-                background: #888;
-                border-radius: 3px;
-                border: 1px solid #000;
-            }
         </style>
     </head>
     <body>
@@ -429,7 +419,7 @@
             <button class="refresh"><img src="refresh.svg" width="30px"></button>
             <input class="l" id="num" type="number" placeholder="Team #">
             <select class="r" id="event" name="event">
-            <option value="" selected>Select a Key</option>
+                <option value="" selected>Select a Key</option>
             </select>
         </div>
         <div id="container">
