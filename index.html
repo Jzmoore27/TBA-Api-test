@@ -126,8 +126,8 @@
                         console.log(data);
                     });
                 });
-
-                function selection(selected){
+                var a = document.getElementById("num")
+                a.addEventListener("change", (event) => {
                     $.ajaxSetup({
                         'CORS': true ,
                         'contentType':'application/json',
@@ -155,10 +155,10 @@
                             select.appendChild(opt);
                         }
                     });
-                }
+                });
                 
                 var a = document.getElementById("num")
-                a.addEventListener("change", function(){selection();});
+                a.addEventListener("change", selection());
                 
                 var closeframe = document.getElementById("closeframe");
                 closeframe.addEventListener("click",()=>{
